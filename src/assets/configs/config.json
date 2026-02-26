@@ -1,0 +1,77 @@
+{
+  "stompWebSocketBaseurl": "",
+  "distributors": [
+    {
+      "environmentName": "TEST",
+      "avaliableDistributors": ["ZIN70", "ZIN07"]
+    },
+    {
+      "environmentName": "FIT",
+      "avaliableDistributors": ["ZIN70", "ZIN07"]
+    },
+    {
+      "environmentName": "SIT",
+      "avaliableDistributors": ["ZIN70", "ZIN07"]
+    },
+    {
+      "environmentName": "PROD",
+      "avaliableDistributors": ["ZIN70", "ZIN07"]
+    }
+  ],
+  "providers": ["ZPR70", "ZPR07"],
+  "environments": ["FIT", "SIT", "PROD", "TEST"],
+  "tbkdTemplates": [
+    {
+      "name": "TBKDFinalTemplate",
+      "payload": "8=FIX.4.1|35=U2|49=PROV|56=EMX|128=INTR|57=EMXSV|129=Bloggsj|52=20210423-08:12:48|9426=TBKD|11=ORDRREF1|9490=PROV|9400=123456|9488=INTR|9494=AGN1234|9401=1|9455=GBP|67=1|9442=OEIC|22=2|48=GB1234567890|54=1|152=5000|68=1|37=7654321|9428=20210423-08:12:48|"
+    }
+  ],
+  "ecniTemplates": [
+    {
+      "name": "ECNIFinalTemplate1",
+      "payload": "8=FIX.4.1|35=U7|49=PROV|56=EMX|128=INTR|57=EMXSV|129=Bloggsj|52=20210423-14:21:45|9426=ECNI|11=ORDRREF1|9490=PROV|9521=INTR|9400=123456|9488=INTR|9494=AGN1234|9455=GBP|9442=OEIC|22=2|48=GB1234567890|9462=5|54=1|152=5000|12=0|9431=0|9458=0|9518=0|9456=11223344|60=20210423-09:00:00|9478=5000|9526=1|9430=S|15=GBP|9525=N|9432=0|9433=0|9434=0|9519=0|9527=1|37=7654321|9428=20210423-08:12:48|119=5000|63=3|64=20210428|"
+    }
+  ],
+  "merrTemplates": [
+    {
+      "name": "MERRFinalTemplate1",
+      "payload": "8=FIX.4.1|35=U4|49=PROV|56=EMX|128=INTR|52=20210422-14:04:13|9426=MERR|9466=1347|9467=OINP|9472=ORDRREF2|9427=5999|58=canc as per email sent 22/04 @ 13:11|"
+    }
+  ],
+  "oinpTemplates": [
+    {
+      "name": "OINPFinalTemplate1",
+      "payload": "8=FIX.4.1|9=898|35=U1|34=5189|52=20251104-13:03:00|49=ZIN07|56=EMX|128=ZPR07|115=ZIN07|9426=OINP|9490=ZPR07|11=5800947|9400=10000089-0001|9488=ZIN07|9494=None selected|9455=GBP|9401=1|67=1|9442=Product001|22=2|48=01DO000|54=2|152=248.45|68=1|9481=20251104-13:03:00|"
+    }
+  ],
+  "hints": [
+    {
+      "fieldName": "GatewayType",
+      "hint": "The EMX gateway to be simulated. Currently, only FIX is supported."
+    },
+    {
+      "fieldName": "TBKDTemplate",
+      "hint": "Mandatory for Provider sessions. The message content to be used for automated transaction booked responses to orders."
+    },
+    {
+      "fieldName": "ECNITemplate",
+      "hint": "Mandatory for Provider sessions. The message content to be used for automated contract notes to be sent after a transaction is booked."
+    },
+    {
+      "fieldName": "ErrorFrequency",
+      "hint": "Mandatory for Provider sessions. The message content to be used for automated transaction booked responses to orders."
+    },
+    {
+      "fieldName": "MERRTemplate",
+      "hint": "Mandatory where error frequency is entered. The message content to be used for Provider errors to be sent as a response to an order."
+    },
+    {
+      "fieldName": "Interval",
+      "hint": "The message send interval, specified in seconds."
+    },
+    {
+      "fieldName": "MesageCount",
+      "hint": "Number of messages sent during a session. The count will reset when a new session is started. "
+    }
+  ]
+}

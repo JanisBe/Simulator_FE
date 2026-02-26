@@ -1,0 +1,12 @@
+<div
+  class="privateKeyFileContainer card-text"
+  appFileDragAndDrop
+  (fileDropped)="onFileDropped($event)"
+  (dragOverState)="isDragOver = $event"
+  [class.drag-over]="isDragOver"
+>
+
+  <label class="custom-file-upload" for="fileDropRef">Click here to choose file or drag and drop it here</label>
+  <input #fileDropRef (change)="fileBrowseHandler($event)" accept=".txt,text/plain" id="fileDropRef" multiple
+         type="file" />
+</div>

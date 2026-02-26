@@ -1,0 +1,102 @@
+<mat-card appearance="outlined">
+  <mat-card-header>
+    <mat-card-title>Messages</mat-card-title>
+  </mat-card-header>
+  <div class="messages-panel">
+    <mat-grid-list cols="6" [rowHeight]="getRowHeight()">
+      <mat-grid-tile colspan="1" rowspan="1">
+        <div class="message-sender-add-new-message-panel">
+          <button [disabled]="isAddNewMessageButtonDisabled()" (click)="onAddNewMessageClick()" mat-flat-button>
+            Add new message
+          </button>
+        </div>
+      </mat-grid-tile>
+
+      <mat-grid-tile colspan="1" rowspan="1">
+        <mat-form-field>
+          <mat-label>Send message every:</mat-label>
+          <mat-select id="mesage-sender-schedule-select" [value]="connectionDetailsStore.messagesFrequency()"
+            (selectionChange)="onMessageFrequencyChange($event.value)" [disabled]="isModifyBulkParametersDisabled()">
+            @for (item of frequency; track $index) {
+            <mat-option [value]="item">{{ item | messageFrequency }} </mat-option>
+            }
+          </mat-select>
+          @if (showHints()) {
+          <mat-hint>
+            {{ configService.getHint('Interval') }}
+          </mat-hint>
+          }
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile colspan="1" rowspan="1">
+        <mat-form-field>
+          <mat-label> Message count </mat-label>
+          <input [value]="connectionDetailsStore.messagesCount()" [disabled]="isModifyBulkParametersDisabled()" min="0"
+            (input)="onMessageCountChange($event)" id="mesage-sender-message-count-input" matInput type="number" />
+          @if (showHints()) {
+          <mat-hint>
+            {{ configService.getHint('MesageCount') }}
+          </mat-hint>
+          }
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile colspan="1" rowspan="1">
+        <div>
+          Procesed messages: {{ messagesStore.batchMessagesCount() }} Status:
+          {{ messagesStore.batchMessageStatus() }}
+        </div>
+      </mat-grid-tile>
+    </mat-grid-list>
+    <div class="messages-table">
+      <table mat-table [dataSource]="messagesStore.distributorMessagesEntities()" class="mat-elevation-z8">
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef>Type</th>
+          <td mat-cell *matCellDef="let element">{{ element.type }}</td>
+        </ng-container>
+        <ng-container matColumnDef="payload">
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let element" class="wrap-text">{{ element.payload }}</td>
+        </ng-container>
+        <ng-container matColumnDef="buttons">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-button (click)="onDeleteMessageClick(element)">Delete</button>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr (click)="onRowClick(row)" mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+  </div>
+</mat-card>
+
+<div class="message-sender-connection-buttons-container">
+  @if (showConnectToDistributorSessionButton()) {
+  <button (click)="connectToDistributorSession()" [disabled]="isConnectToDistributorSessionDisabled()" mat-flat-button>
+    Connect to Distributor session.
+  </button>
+  }
+
+  @if (!showConnectToDistributorSessionButton()) {
+  <button id="mesage-sender-send-batch-button" (click)="sendMessages()" [disabled]="isSendMessagesButtonDisabled()"
+    mat-flat-button>
+    Send messages batch.
+  </button>
+  }
+
+  @if (!showConnectToDistributorSessionButton()) {
+  <button id="disconnect-from-distribuotr-session-button" (click)="disconnectFromDistributorSession()"
+    [disabled]="isDisconnectFromDistributorSessionDisabled()" mat-stroked-button>
+    Disonnect from Distributor session.
+  </button>
+  }
+
+  @if (showStopBatchButton()) {
+  <button id="stop-sending-bulk-messages-button" (click)="stopSendingBulkMessages()"
+    [disabled]="isDisconnectFromDistributorSessionDisabled()" mat-stroked-button>
+    Stop Batch.
+  </button>
+  }
+</div>

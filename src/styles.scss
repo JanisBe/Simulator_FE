@@ -1,0 +1,94 @@
+@use '@angular/material' as mat;
+
+$theme: mat.define-theme(
+  (
+    color: (
+      theme-type: dark,
+      primary: mat.$violet-palette,
+    ),
+    density: (
+      scale: -3,
+    ),
+  )
+);
+
+.grid-input {
+  .mat-mdc-form-field-subscript-wrapper {
+    display: none;
+  }
+}
+
+.mat-mdc-tab-body-content {
+  overflow: hidden !important;
+}
+
+.mdc-text-field--outlined {
+  .mat-mdc-form-field-flex {
+    /* Common customizations for both labeled and non-labeled fields */
+    .mdc-notched-outline {
+      height: 45px;
+      padding-top: 10px;
+    }
+
+    .mdc-notched-outline--no-label {
+      height: 45px;
+      padding-top: 10px;
+    }
+
+    /* Customizing the border color of the leading, notch, and trailing parts */
+    .mdc-notched-outline__leading {
+      border-color: #026e78 !important;
+    }
+
+    .mdc-notched-outline__notch {
+      border-color: #026e78 !important;
+
+      .mdc-floating-label {
+        cursor: inherit;
+        top: 16px;
+      }
+    }
+
+    .mdc-notched-outline__trailing {
+      border-color: #026e78 !important;
+    }
+  }
+
+  /* Focused state customization */
+  .mdc-text-field--focused {
+    .mdc-notched-outline__leading {
+      border-color: #5bdcc6 !important;
+    }
+
+    .mdc-notched-outline__notch {
+      border-color: #5bdcc6 !important;
+    }
+
+    .mdc-notched-outline__trailing {
+      border-color: #5bdcc6 !important;
+    }
+  }
+
+  :focus-within .mdc-notched-outline,
+  :focus-within .mdc-notched-outline__leading,
+  :focus-within .mdc-notched-outline__trailing {
+    border-color: #5bdcc6 !important;
+    border-width: 1px !important;
+  }
+}
+
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+error_label {
+  background-color: red;
+}

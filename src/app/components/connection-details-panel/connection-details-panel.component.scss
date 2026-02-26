@@ -1,0 +1,54 @@
+.environment-configuration-panel {
+  padding: 16px;
+
+  .parameters-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding-top: 16px;
+  }
+
+  .header-parameters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    align-items: center;
+
+    .connection-states {
+      grid-column: span 1;
+      font-size: 0.9em;
+      color: rgba(0, 0, 0, 0.7);
+
+      p {
+        margin: 4px 0;
+      }
+    }
+  }
+
+  .templates-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+    align-items: start;
+
+    .error-template-field {
+      min-height: 80px; // Ensure space for mat-form-field and hint
+    }
+  }
+
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+.mat-mdc-option-active {
+  background-color: red;
+}
+
+.mat-mdc-select-panel {
+  background: rgba(0, 255, 0, 0.5) !important;
+}
+
+.new-mesage-option {
+  border-top: 1px solid gray;
+}

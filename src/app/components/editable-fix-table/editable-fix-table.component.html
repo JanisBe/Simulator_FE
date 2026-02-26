@@ -1,0 +1,94 @@
+<button id="fix-message-add-row-button" mat-button (click)="addNewRow()">Add property</button>
+<table mat-table [dataSource]="templatePropertiesData()" class="mat-elevation-z8">
+  <!-- field Id Column -->
+  <ng-container matColumnDef="fieldId">
+    <th mat-header-cell *matHeaderCellDef>Field Id</th>
+    <td mat-cell *matCellDef="let element; let i = index">
+      <ng-container>
+        @if (!isEditing(element.rowId)) {
+          <span [ngClass]="element.isTemplateKeyValid ? '' : 'invalid_property'">
+            {{ element.propertyKey }}</span
+          >
+        } @else {
+          <mat-form-field class="grid-input" appearance="outline">
+            <input
+              matInput
+              [value]="tempEdits().get(element.rowId)?.propertyKey"
+              [matAutocomplete]="auto"
+              type="number"
+              (input)="updateTemp(element.rowId, 'propertyKey', $event); filterFieldOptions($event)"
+            />
+            <mat-autocomplete
+              #auto="matAutocomplete"
+              (optionSelected)="onOptionSelected(element.rowId, $event)"
+            >
+              @for (option of matchingFieldDescriptions(); track option.id) {
+                <mat-option [value]="option.id">{{
+                  option.id + ' - ' + option.description
+                }}</mat-option>
+              }
+            </mat-autocomplete>
+          </mat-form-field>
+        }
+      </ng-container>
+    </td>
+  </ng-container>
+
+  <!--field description Column -->
+  <ng-container matColumnDef="description">
+    <th mat-header-cell *matHeaderCellDef>Description</th>
+    <td mat-cell *matCellDef="let element; let i = index">
+      <ng-container>
+        @if (!isEditing(element.rowId)) {
+          {{ element.description }}
+        } @else {
+          {{ getTempDescription(element.rowId) }}
+        }
+      </ng-container>
+    </td>
+  </ng-container>
+
+  <!--field name Column -->
+  <ng-container matColumnDef="fieldName">
+    <th mat-header-cell *matHeaderCellDef>field Name</th>
+    <td mat-cell *matCellDef="let element; let i = index">
+      <ng-container>
+        @if (!isEditing(element.rowId)) {
+          {{ element.propertyValue }}
+        } @else {
+          <mat-form-field class="grid-input" appearance="outline">
+            <input
+              matInput
+              [value]="element.propertyValue"
+              (input)="updateTemp(element.rowId, 'propertyValue', $event)"
+            />
+          </mat-form-field>
+        }
+      </ng-container>
+    </td>
+  </ng-container>
+
+  <!-- Actions Column -->
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef>Actions</th>
+    <td mat-cell *matCellDef="let element; let i = index">
+      <ng-container>
+        @if (!isEditing(element.rowId)) {
+          <button mat-button (click)="startEdit(element.rowId)">Edit</button>
+          <button class="delete-row-button" mat-button (click)="deleteRow(element)">Delete</button>
+          @if (element.messages.length > 0) {
+            <button [matTooltip]="formatDisplayWarnings(element)" mat-button>Warnings</button>
+          }
+        }
+
+        @if (isEditing(element.rowId)) {
+          <button mat-button color="primary" (click)="saveEdit(element.rowId)">Save</button>
+          <button mat-button color="warn" (click)="cancelEdit(element.rowId)">Cancel</button>
+        }
+      </ng-container>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>

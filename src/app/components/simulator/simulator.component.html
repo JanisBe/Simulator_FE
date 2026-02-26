@@ -1,0 +1,21 @@
+<div>
+  <mat-toolbar>
+    Simulator Engine
+    <span class="space-container"></span>
+    <mat-checkbox
+      (change)="onShowHintsCheckboxChange($event)"
+      [checked]="connectionDetailsStore.showHints()"
+      class="example-margin"
+    >Show hints
+    </mat-checkbox>
+  </mat-toolbar>
+  <app-connection-details-panel></app-connection-details-panel>
+  <mat-tab-group class="no-scroll-tabs" mat-align-tabs="start" mat-stretch-tabs="false">
+    <mat-tab label="Distributor - add new messages">
+      <app-message-sender></app-message-sender>
+    </mat-tab>
+    <mat-tab label="Provider incoming messages">
+      <app-message-receiver></app-message-receiver>
+    </mat-tab>
+  </mat-tab-group>
+</div>

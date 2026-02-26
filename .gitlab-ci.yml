@@ -1,0 +1,58 @@
+stages:
+  - Security scanning
+
+variables:
+  GIT_STRATEGY: clone
+  SECRETS_ANALYZER_VERSION: 6.2
+  DS_MAJOR_VERSION: 5.3.0
+
+include:
+  # Static
+  - template: Security/SAST.gitlab-ci.yml
+  - template: Security/Dependency-Scanning.gitlab-ci.yml
+  - template: Security/Secret-Detection.gitlab-ci.yml
+
+sast:
+  stage: Security scanning
+
+semgrep-sast:
+  variables:
+    SAST_ANALYZER_IMAGE_TAG: 5.6.0
+  artifacts:
+    reports:
+      sast: gl-sast-report.json
+    expire_in: 90 days
+  allow_failure: true
+  tags:
+    - semgrep-sast
+
+dependency_scanning:
+  stage: Security scanning
+
+gemnasium-dependency_scanning:
+  variables:
+    DS_MAX_DEPTH: -1
+  artifacts:
+    reports:
+      dependency_scanning: gl-dependency-scanning-report.json
+      cyclonedx: '**/gl-sbom-*.cdx.json'
+    expire_in: 90 days
+  allow_failure: true
+  tags:
+    - dependency-scanning
+  script:
+    - /usr/bin/git config --global http.sslVerify false
+    - /analyzer run
+
+secret_detection:
+  stage: Security scanning
+  artifacts:
+    reports:
+      secret_detection: gl-secret-detection-report.json
+    expire_in: 90 days
+  allow_failure: true
+  script:
+    - /usr/bin/git config --global http.sslVerify false
+    - /analyzer run
+  tags:
+    - secrets-detection

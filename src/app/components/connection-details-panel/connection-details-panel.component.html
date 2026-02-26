@@ -1,0 +1,140 @@
+<div class="environment-configuration-panel">
+  <mat-card appearance="outlined">
+    <mat-card-header>
+      <mat-card-title>Environment configuration</mat-card-title>
+    </mat-card-header>
+    <div class="parameters-panel" [formGroup]="form">
+      <!-- First Row: Environment, Gateway, Distributor, Provider, Custom Provider -->
+      <div class="header-parameters-grid">
+        <mat-form-field appearance="fill" class="env-select">
+          <mat-label>Environment</mat-label>
+          <mat-select formControlName="environment" [disabled]="shouldInputsBeDisabled()" id="mesage-sender-env-select">
+            @for (item of environments; track $index) {
+            <mat-option [value]="item">{{ item }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="gateway-select">
+          <mat-label>Gateway type</mat-label>
+          <mat-select formControlName="gatewayType" [disabled]="shouldInputsBeDisabled()"
+            id="mesage-sender-gateway-select">
+            @for (item of gateways; track $index) {
+            <mat-option [value]="item">{{ item }}</mat-option>
+            }
+          </mat-select>
+          @if (showHints()) {
+          <mat-hint>{{ configService.getHint('GatewayType') }}</mat-hint>
+          }
+        </mat-form-field>
+
+        <mat-form-field class="distributor-select">
+          <mat-label>Distributor</mat-label>
+          <mat-select formControlName="distributor" [disabled]="shouldDistributorFieldBeDisabled()"
+            id="mesage-sender-distributor-select">
+            @for (item of distributors; track $index) {
+            <mat-option [value]="item">{{ item }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="provider-select">
+          <mat-label>Provider</mat-label>
+          @if (!form.controls.useCustomProvider.value) {
+          <mat-select formControlName="provider" id="mesage-sender-distributor-select">
+            @for (item of providers; track $index) {
+            <mat-option [value]="item">{{ item }}</mat-option>
+            }
+          </mat-select>
+          }
+
+          @if (form.controls.useCustomProvider.value) {
+          <input formControlName="provider" id="mesage-sender-message-count-input" matInput />
+          }
+        </mat-form-field>
+
+        <div class="custom-provider-toggle">
+          <mat-checkbox class="example-margin" formControlName="useCustomProvider">
+            Use custom provider
+          </mat-checkbox>
+        </div>
+
+        <div class="connection-states">
+          <p>Distributor: {{ distributorConnectionDetailsState() }}</p>
+          <p>Provider: {{ providerConnectionDetailsState() }}</p>
+        </div>
+      </div>
+
+      <!-- Second Row: Templates and Frequency -->
+      <div class="templates-grid">
+        <mat-form-field>
+          <mat-label>Select TBKD Template</mat-label>
+          <mat-select formControlName="tbkdTemplate" [disabled]="shouldTemplatesSelectPanelBeDisabled()"
+            id="select-tbkd-select">
+            @for (item of TBKDTemplates; track $index) {
+            <mat-option [value]="item">{{ item.name }}</mat-option>
+            }
+            <mat-option class="new-mesage-option" (click)="onCustomTBKDSelectClick()"
+              [value]="{ name: 'custom', payload: '' }">
+              Custom
+            </mat-option>
+          </mat-select>
+          @if (showHints()) {
+          <mat-hint>{{ configService.getHint('TBKDTemplate') }}</mat-hint>
+          }
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Select ECNI Template</mat-label>
+          <mat-select formControlName="ecniTemplate" [disabled]="shouldTemplatesSelectPanelBeDisabled()"
+            id="select-ecni-select">
+            @for (item of ECNITemplates; track $index) {
+            <mat-option [value]="item">{{ item.name }}</mat-option>
+            }
+            <mat-option class="new-mesage-option" (click)="onCustomECNISelectClick()"
+              [value]="{ name: 'custom', payload: '' }">
+              Custom
+            </mat-option>
+          </mat-select>
+          @if (showHints()) {
+          <mat-hint>{{ configService.getHint('ECNITemplate') }}</mat-hint>
+          }
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>MERR error Frequency</mat-label>
+          <mat-select formControlName="errorFrequency" [disabled]="shouldTemplatesSelectPanelBeDisabled()"
+            id="mesage-sender-schedule-select">
+            @for (item of errorIntervals; track $index) {
+            <mat-option [value]="item">{{ formatSelectedErrorFrequency(item) }}</mat-option>
+            }
+          </mat-select>
+          @if (showHints()) {
+          <mat-hint>{{ configService.getHint('ErrorFrequency') }}</mat-hint>
+          }
+        </mat-form-field>
+
+        <div class="error-template-field">
+          @if (messagesStore.errorFrequency() !== 0) {
+          <mat-form-field>
+            <mat-label>Select Error Template</mat-label>
+            <mat-select formControlName="merrTemplate" [disabled]="shouldTemplatesSelectPanelBeDisabled()"
+              id="select-merr-select">
+              @for (item of ErrorTemplates; track $index) {
+              <mat-option [value]="item">{{ item.name }}</mat-option>
+              }
+              <mat-option class="new-mesage-option" (click)="onCustomMERRSelectClick()"
+                [value]="{ name: 'custom', payload: '' }">
+                Custom
+              </mat-option>
+            </mat-select>
+            @if (showHints()) {
+            <mat-hint>{{ configService.getHint('MERRTemplate') }}</mat-hint>
+            }
+          </mat-form-field>
+          }
+        </div>
+      </div>
+    </div>
+  </mat-card>
+</div>

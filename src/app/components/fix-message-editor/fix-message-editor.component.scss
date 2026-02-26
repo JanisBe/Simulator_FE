@@ -1,0 +1,34 @@
+.fix-message-editor-container {
+  padding: 30px;
+}
+
+.mdc-text-field--filled {
+  background-color: rgb(199, 165, 127);
+}
+
+.validation-container {
+  border-bottom: 2px solid red;
+}
+
+.invalid_property {
+  color: red;
+}
+
+.non-edit-template-property {
+  width: 150px;
+}
+
+.mat-column-propertyKey {
+  width: 100px;
+  word-wrap: break-word;
+}
+
+.properties-table {
+  overflow: auto;
+  max-height: 400px;
+}
+
+.fix-message-editor-buttons {
+  float: right;
+  margin-top: 20px;
+}
