@@ -1,5 +1,12 @@
 .fix-message-editor-container {
   padding: 30px;
+
+  .header-container {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: flex-start;
+  }
 }
 
 .mdc-text-field--filled {
@@ -31,4 +38,24 @@
 .fix-message-editor-buttons {
   float: right;
   margin-top: 20px;
+}
+
+.message-type-label-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.25em;
+  padding: 0 16px;
+  height: 56px;
+  justify-content: center;
+
+  .label {
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.6);
+    margin-bottom: 4px;
+  }
+
+  .value {
+    font-size: 16px;
+    font-weight: 500;
+  }
 }

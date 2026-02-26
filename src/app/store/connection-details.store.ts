@@ -19,7 +19,7 @@ const initialState: ConnectionDetailsState = {
   distributorSocketConnectionStatus: ConnectionState.DISCONNECTED,
   providerSocketConnectionStatus: ConnectionState.DISCONNECTED,
   selectedEnvironment: '',
-  selectedGatewayType: '',
+  selectedGatewayType: 'FIX',
   selectedDistributor: '',
   selectedProvider: '',
   messagesFrequency: 0,

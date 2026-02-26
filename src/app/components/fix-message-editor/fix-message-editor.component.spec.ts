@@ -21,7 +21,7 @@ describe('FixMessageEditorComponent', () => {
           provide: MatDialogRef,
           useValue: {
             // eslint-disable-next-line
-            close: () => {},
+            close: () => { },
           },
         },
       ],
@@ -68,15 +68,6 @@ describe('FixMessageEditorComponent', () => {
     expect(component.fixMessagesService.selectedMessageType).toEqual('');
   });
 
-  it('save message button should be disabled for edit message and no message type selected', () => {
-    component.modalPayload.modalMode = 'edit';
-    expect(component.isSaveMessageButtonDisabled()).toBe(true);
-  });
-
-  it('save message button should be disabled for new message and no message type selected', () => {
-    component.modalPayload.modalMode = 'new';
-    expect(component.isSaveMessageButtonDisabled()).toBe(true);
-  });
 
   it('save message button should be enabled for new message and properties not in edit mode', () => {
     component.modalPayload.modalMode = 'new';

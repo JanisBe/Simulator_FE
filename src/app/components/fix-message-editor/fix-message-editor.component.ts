@@ -38,7 +38,7 @@ export class FixMessageEditorComponent implements OnInit {
   readonly fixMessagesService = inject(FixMessagesService);
   public data: FixMessageEditorModalPayload = inject(MAT_DIALOG_DATA);
   messageTemplates: Template[] = [];
-  isSelectMessageTypeDisabled = false;
+
 
   fieldDescriptionOptions: FixFieldKey[] = [];
 
@@ -73,9 +73,6 @@ export class FixMessageEditorComponent implements OnInit {
     this.convertTemplateToParamsList(val.value ?? '');
   }
 
-  onMessageTypeSelectionChange(messageType: MatSelectChange<string>) {
-    this.fixMessagesService.selectedMessageType = messageType.value;
-  }
 
   ngOnInit(): void {
     if (this.data) {
@@ -85,7 +82,6 @@ export class FixMessageEditorComponent implements OnInit {
     this.messageTemplates = this.getTemplates(this.modalPayload.messageType);
     if (this.modalPayload.messageType) {
       this.fixMessagesService.selectedMessageType = this.modalPayload.messageType;
-      this.isSelectMessageTypeDisabled = true;
     }
 
     if (this.modalPayload?.modalMode === 'edit') {

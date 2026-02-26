@@ -118,11 +118,9 @@ export class ConnectionDetailsPanelComponent implements OnInit {
         provider: this.connectionDetailsStore.selectedProvider(),
         errorFrequency: this.messagesStore.errorFrequency(),
       },
-      { emitEvent: false },
+      { emitEvent: true },
     );
 
-    // Sync initial distributors based on environment
-    this.updateDistributorsList(this.form.controls.environment.value);
   }
 
   private setupFormSubscriptions() {

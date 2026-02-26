@@ -1,46 +1,32 @@
 <div class="fix-message-editor-container">
-  <mat-form-field>
-    <mat-label>Template</mat-label>
-    <mat-select (selectionChange)="onTemplateSelectionChange($event)" id="mesage-sender-env-select">
-      @for (item of messageTemplates; track $index) {
+  <div class="header-container">
+    <mat-form-field>
+      <mat-label>Template</mat-label>
+      <mat-select (selectionChange)="onTemplateSelectionChange($event)" id="mesage-sender-env-select">
+        @for (item of messageTemplates; track $index) {
         <mat-option [value]="item.payload">{{ item.name }}</mat-option>
-      }
-    </mat-select>
-  </mat-form-field>
+        }
+      </mat-select>
+    </mat-form-field>
 
-  <mat-form-field>
-    <mat-label>Message Type</mat-label>
-    <mat-select
-      id="fix-message-message-type-select"
-      [disabled]="isSelectMessageTypeDisabled"
-      (selectionChange)="onMessageTypeSelectionChange($event)"
-      [value]="fixMessagesService.selectedMessageType"
-      name="selectedMessageType"
-    >
-      <mat-option value="OINP">OINP</mat-option>
-      <mat-option value="TBKD">TBKD</mat-option>
-      <mat-option value="ECNI">ECNI</mat-option>
-    </mat-select>
-  </mat-form-field>
+    <div class="message-type-label-container">
+      <span class="label">Message Type:</span>
+      <span class="value">{{ fixMessagesService.selectedMessageType }}</span>
+    </div>
+  </div>
 
   <app-filedrop (fileSubmitEvent)="handleMessageFileAdd($event)"></app-filedrop>
 
   <div class="properties-table">
-    <app-editable-fix-table
-      [(templatePropertiesSignal)]="editedMessageProperties"
-      (canSaveMessageChanged)="canSaveMessageChanged($event)"
-    >
+    <app-editable-fix-table [(templatePropertiesSignal)]="editedMessageProperties"
+      (canSaveMessageChanged)="canSaveMessageChanged($event)">
     </app-editable-fix-table>
   </div>
 
   <div class="fix-message-editor-buttons">
     <button id="fix-message-save-button" mat-button (click)="closeDialog()">Close dialog</button>
-    <button
-      id="fix-message-save-button"
-      mat-flat-button
-      [disabled]="isSaveMessageButtonDisabled()"
-      (click)="saveMessage()"
-    >
+    <button id="fix-message-save-button" mat-flat-button [disabled]="isSaveMessageButtonDisabled()"
+      (click)="saveMessage()">
       Add to messages batch
     </button>
   </div>
