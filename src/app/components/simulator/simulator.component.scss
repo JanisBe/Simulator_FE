@@ -1,9 +1,44 @@
-.app-container {
-  max-width: 1500px;
-  margin-left: auto;
-  margin-right: auto;
+.connection-states {
+  font-size: 0.75rem;
+  line-height: 1.2;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-weight: 500;
+  margin-right: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: all 0.3s ease;
+
+  p {
+    margin: 0;
+  }
+
+  &.status-disconnected {
+    background-color: #e0e0e0;
+    color: #616161;
+  }
+
+  &.status-connecting {
+    background-color: #fff9c4;
+    color: #fbc02d;
+  }
+
+  &.status-connected {
+    background-color: #c8e6c9;
+    color: #388e3c;
+  }
+
+  &.status-error {
+    background-color: #ffcdd2;
+    color: #d32f2f;
+  }
 }
 
 .space-container {
   flex: 1 1 auto;
+}
+
+.show-hints-checkbox {
+  padding-right: 16px;
 }

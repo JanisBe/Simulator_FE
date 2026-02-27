@@ -2,12 +2,16 @@
   <mat-toolbar>
     Simulator Engine
     <span class="space-container"></span>
-    <mat-checkbox
-      (change)="onShowHintsCheckboxChange($event)"
-      [checked]="connectionDetailsStore.showHints()"
-      class="example-margin"
-    >Show hints
-    </mat-checkbox>
+    <div class="show-hints-checkbox">
+      <mat-checkbox (change)="onShowHintsCheckboxChange($event)" [checked]="connectionDetailsStore.showHints()">Show
+        hints
+      </mat-checkbox>
+    </div>
+    <div class="connection-states" [class]="connectionDetailsStore.connectionStatusColorClass()">
+      <p>Distributor: {{ connectionDetailsStore.distributorStatusLabel() }}</p>
+      <p>Provider: {{ connectionDetailsStore.providerStatusLabel() }}</p>
+    </div>
+
   </mat-toolbar>
   <app-connection-details-panel></app-connection-details-panel>
   <mat-tab-group class="no-scroll-tabs" mat-align-tabs="start" mat-stretch-tabs="false">

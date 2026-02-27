@@ -65,26 +65,6 @@ export class ConnectionDetailsPanelComponent implements OnInit {
     return !environment || !gatewayType || !provider;
   });
 
-  readonly distributorConnectionStateLabel = computed(() => {
-    switch (this.connectionDetailsStore.distributorSocketConnectionStatus()) {
-      case ConnectionState.DISCONNECTED: return 'Disconnected';
-      case ConnectionState.CONNECTING: return 'Connecting...';
-      case ConnectionState.CONNECTED: return 'Connected';
-      case ConnectionState.ERROR: return 'Error';
-      default: return 'Unknown';
-    }
-  });
-
-  readonly providerConnectionStateLabel = computed(() => {
-    switch (this.connectionDetailsStore.providerSocketConnectionStatus()) {
-      case ConnectionState.DISCONNECTED: return 'Disconnected';
-      case ConnectionState.CONNECTING: return 'Connecting...';
-      case ConnectionState.CONNECTED: return 'Listening';
-      case ConnectionState.ERROR: return 'Error';
-      default: return 'Unknown';
-    }
-  });
-
   readonly shouldInputsBeDisabled = computed(() =>
     this.connectionDetailsStore.distributorSocketConnectionStatus() === ConnectionState.CONNECTED ||
     this.connectionDetailsStore.providerSocketConnectionStatus() === ConnectionState.CONNECTED

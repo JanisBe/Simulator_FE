@@ -39,6 +39,7 @@ export const ConnectionDetailsStore = signalStore(
       selectedGatewayType,
       selectedEnvironment,
       distributorSocketConnectionStatus,
+      providerSocketConnectionStatus,
     }) => ({
       isBatchMessage: computed(() => messagesFrequency() >= 1 && isBatchMessageTriggered()),
       isConnectToDistributorSessionDisabled: computed(
@@ -55,6 +56,33 @@ export const ConnectionDetailsStore = signalStore(
           !selectedDistributor() ||
           !selectedEnvironment(),
       ),
+      distributorStatusLabel: computed(() => {
+        switch (distributorSocketConnectionStatus()) {
+          case ConnectionState.DISCONNECTED: return 'Disconnected';
+          case ConnectionState.CONNECTING: return 'Connecting';
+          case ConnectionState.CONNECTED: return 'Connected';
+          case ConnectionState.ERROR: return 'Error';
+          default: return 'Unknown';
+        }
+      }),
+      providerStatusLabel: computed(() => {
+        switch (providerSocketConnectionStatus()) {
+          case ConnectionState.DISCONNECTED: return 'Disconnected';
+          case ConnectionState.CONNECTING: return 'Connecting';
+          case ConnectionState.CONNECTED: return 'Connected';
+          case ConnectionState.ERROR: return 'Error';
+          default: return 'Unknown';
+        }
+      }),
+      connectionStatusColorClass: computed(() => {
+        const dStatus = distributorSocketConnectionStatus();
+        const pStatus = providerSocketConnectionStatus();
+
+        if (dStatus === ConnectionState.ERROR || pStatus === ConnectionState.ERROR) return 'status-error';
+        if (dStatus === ConnectionState.CONNECTED && pStatus === ConnectionState.CONNECTED) return 'status-connected';
+        if (dStatus === ConnectionState.CONNECTING || pStatus === ConnectionState.CONNECTING) return 'status-connecting';
+        return 'status-disconnected';
+      }),
     }),
   ),
 

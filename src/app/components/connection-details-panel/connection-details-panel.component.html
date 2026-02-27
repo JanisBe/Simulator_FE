@@ -6,7 +6,7 @@
     <div class="parameters-panel" [formGroup]="form">
       <!-- First Row: Environment, Gateway, Distributor, Provider, Custom Provider -->
       <div class="header-parameters-grid">
-        <mat-form-field appearance="fill" class="env-select">
+        <mat-form-field class="env-select">
           <mat-label>Environment</mat-label>
           <mat-select formControlName="environment" id="mesage-sender-env-select">
             @for (item of environments(); track $index) {
@@ -59,10 +59,6 @@
           </mat-checkbox>
         </div>
 
-        <div class="connection-states">
-          <p>Distributor: {{ distributorConnectionStateLabel() }}</p>
-          <p>Provider: {{ providerConnectionStateLabel() }}</p>
-        </div>
       </div>
 
       <!-- Second Row: Templates and Frequency -->
