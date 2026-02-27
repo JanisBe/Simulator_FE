@@ -13,33 +13,34 @@
       </mat-grid-tile>
 
       <mat-grid-tile colspan="1" rowspan="1">
-        <mat-form-field>
-          <mat-label>Send message every:</mat-label>
-          <mat-select id="mesage-sender-schedule-select" [value]="connectionDetailsStore.messagesFrequency()"
-            (selectionChange)="onMessageFrequencyChange($event.value)" [disabled]="isModifyBulkParametersDisabled()">
-            @for (item of frequency; track $index) {
-            <mat-option [value]="item">{{ item | messageFrequency }} </mat-option>
-            }
-          </mat-select>
+        <div class="field-with-hint">
+          <mat-form-field>
+            <mat-label>Send message every:</mat-label>
+            <mat-select id="mesage-sender-schedule-select" [value]="connectionDetailsStore.messagesFrequency()"
+              (selectionChange)="onMessageFrequencyChange($event.value)" [disabled]="isModifyBulkParametersDisabled()">
+              @for (item of frequency; track $index) {
+              <mat-option [value]="item">{{ item | messageFrequency }} </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
           @if (showHints()) {
-          <mat-hint>
-            {{ configService.getHint('Interval') }}
-          </mat-hint>
+          <mat-icon class="hint-icon" [matTooltip]="configService.getHint('Interval')">help_outline</mat-icon>
           }
-        </mat-form-field>
+        </div>
       </mat-grid-tile>
 
       <mat-grid-tile colspan="1" rowspan="1">
-        <mat-form-field>
-          <mat-label> Message count </mat-label>
-          <input [value]="connectionDetailsStore.messagesCount()" [disabled]="isModifyBulkParametersDisabled()" min="0"
-            (input)="onMessageCountChange($event)" id="mesage-sender-message-count-input" matInput type="number" />
+        <div class="field-with-hint">
+          <mat-form-field>
+            <mat-label> Message count </mat-label>
+            <input [value]="connectionDetailsStore.messagesCount()" [disabled]="isModifyBulkParametersDisabled()"
+              min="0" (input)="onMessageCountChange($event)" id="mesage-sender-message-count-input" matInput
+              type="number" />
+          </mat-form-field>
           @if (showHints()) {
-          <mat-hint>
-            {{ configService.getHint('MesageCount') }}
-          </mat-hint>
+          <mat-icon class="hint-icon" [matTooltip]="configService.getHint('MesageCount')">help_outline</mat-icon>
           }
-        </mat-form-field>
+        </div>
       </mat-grid-tile>
 
       <mat-grid-tile colspan="1" rowspan="1">
@@ -99,4 +100,5 @@
     Stop Batch.
   </button>
   }
+
 </div>

@@ -36,8 +36,33 @@
     }
   }
 
+  .field-with-hint {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    mat-form-field {
+      flex: 1;
+    }
+  }
+
   mat-form-field {
     width: 100%;
+  }
+
+  .hint-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    color: rgba(0, 0, 0, 0.4);
+    cursor: help;
+    // Offset upward slightly to align with the middle of the input area (above subscript)
+    margin-bottom: 1.25em;
+
+    &:hover {
+      color: #1976d2;
+    }
   }
 }
 

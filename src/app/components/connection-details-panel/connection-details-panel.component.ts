@@ -12,6 +12,8 @@ import { ConnectionState, Template } from '../../models/models';
 import { ConfigService } from '../../services/config.service';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { EnviromentAvaliableDistributors } from '../../models/fix-models';
 import { FixMessageConverterService } from '../../services/fix-message-converter.service';
 
@@ -23,6 +25,8 @@ import { FixMessageConverterService } from '../../services/fix-message-converter
     MatButtonModule,
     MatCheckboxModule,
     MatInputModule,
+    MatIconModule,
+    MatTooltipModule,
     ReactiveFormsModule,
   ],
   templateUrl: './connection-details-panel.component.html',

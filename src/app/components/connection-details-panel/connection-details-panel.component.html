@@ -15,17 +15,19 @@
           </mat-select>
         </mat-form-field>
 
-        <mat-form-field class="gateway-select">
-          <mat-label>Gateway type</mat-label>
-          <mat-select formControlName="gatewayType" id="mesage-sender-gateway-select">
-            @for (item of gateways; track $index) {
-            <mat-option [value]="item">{{ item }}</mat-option>
-            }
-          </mat-select>
+        <div class="field-with-hint">
+          <mat-form-field class="gateway-select">
+            <mat-label>Gateway type</mat-label>
+            <mat-select formControlName="gatewayType" id="mesage-sender-gateway-select">
+              @for (item of gateways; track $index) {
+              <mat-option [value]="item">{{ item }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
           @if (showHints()) {
-          <mat-hint>{{ configService.getHint('GatewayType') }}</mat-hint>
+          <mat-icon class="hint-icon" [matTooltip]="configService.getHint('GatewayType')">help_outline</mat-icon>
           }
-        </mat-form-field>
+        </div>
 
         <mat-form-field class="distributor-select">
           <mat-label>Distributor</mat-label>
@@ -63,70 +65,79 @@
 
       <!-- Second Row: Templates and Frequency -->
       <div class="templates-grid">
-        <mat-form-field>
-          <mat-label>Select TBKD Template</mat-label>
-          <mat-select formControlName="tbkdTemplate" id="select-tbkd-select">
-            @for (item of TBKDTemplates(); track $index) {
-            <mat-option [value]="item">{{ item.name }}</mat-option>
-            }
-            <mat-option class="new-mesage-option" (click)="onCustomTBKDSelectClick()"
-              [value]="{ name: 'custom', payload: '' }">
-              Custom
-            </mat-option>
-          </mat-select>
-          @if (showHints()) {
-          <mat-hint>{{ configService.getHint('TBKDTemplate') }}</mat-hint>
-          }
-        </mat-form-field>
-
-        <mat-form-field>
-          <mat-label>Select ECNI Template</mat-label>
-          <mat-select formControlName="ecniTemplate" id="select-ecni-select">
-            @for (item of ECNITemplates(); track $index) {
-            <mat-option [value]="item">{{ item.name }}</mat-option>
-            }
-            <mat-option class="new-mesage-option" (click)="onCustomECNISelectClick()"
-              [value]="{ name: 'custom', payload: '' }">
-              Custom
-            </mat-option>
-          </mat-select>
-          @if (showHints()) {
-          <mat-hint>{{ configService.getHint('ECNITemplate') }}</mat-hint>
-          }
-        </mat-form-field>
-
-        <mat-form-field>
-          <mat-label>MERR error Frequency</mat-label>
-          <mat-select formControlName="errorFrequency" id="mesage-sender-schedule-select">
-            @for (item of errorIntervals; track $index) {
-            <mat-option [value]="item">{{ formatSelectedErrorFrequency(item) }}</mat-option>
-            }
-          </mat-select>
-          @if (showHints()) {
-          <mat-hint>{{ configService.getHint('ErrorFrequency') }}</mat-hint>
-          }
-        </mat-form-field>
-
-        <div class="error-template-field">
-          @if (messagesStore.errorFrequency() !== 0) {
+        <div class="field-with-hint">
           <mat-form-field>
-            <mat-label>Select Error Template</mat-label>
-            <mat-select formControlName="merrTemplate" id="select-merr-select">
-              @for (item of ErrorTemplates(); track $index) {
+            <mat-label>Select TBKD Template</mat-label>
+            <mat-select formControlName="tbkdTemplate" id="select-tbkd-select">
+              @for (item of TBKDTemplates(); track $index) {
               <mat-option [value]="item">{{ item.name }}</mat-option>
               }
-              <mat-option class="new-mesage-option" (click)="onCustomMERRSelectClick()"
+              <mat-option class="new-mesage-option" (click)="onCustomTBKDSelectClick()"
                 [value]="{ name: 'custom', payload: '' }">
                 Custom
               </mat-option>
             </mat-select>
-            @if (showHints()) {
-            <mat-hint>{{ configService.getHint('MERRTemplate') }}</mat-hint>
-            }
           </mat-form-field>
+          @if (showHints()) {
+          <mat-icon class="hint-icon" [matTooltip]="configService.getHint('TBKDTemplate')">help_outline</mat-icon>
+          }
+        </div>
+
+        <div class="field-with-hint">
+          <mat-form-field>
+            <mat-label>Select ECNI Template</mat-label>
+            <mat-select formControlName="ecniTemplate" id="select-ecni-select">
+              @for (item of ECNITemplates(); track $index) {
+              <mat-option [value]="item">{{ item.name }}</mat-option>
+              }
+              <mat-option class="new-mesage-option" (click)="onCustomECNISelectClick()"
+                [value]="{ name: 'custom', payload: '' }">
+                Custom
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          @if (showHints()) {
+          <mat-icon class="hint-icon" [matTooltip]="configService.getHint('ECNITemplate')">help_outline</mat-icon>
+          }
+        </div>
+
+        <div class="field-with-hint">
+          <mat-form-field>
+            <mat-label>MERR error Frequency</mat-label>
+            <mat-select formControlName="errorFrequency" id="mesage-sender-schedule-select">
+              @for (item of errorIntervals; track $index) {
+              <mat-option [value]="item">{{ formatSelectedErrorFrequency(item) }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          @if (showHints()) {
+          <mat-icon class="hint-icon" [matTooltip]="configService.getHint('ErrorFrequency')">help_outline</mat-icon>
+          }
+        </div>
+
+        <div class="error-template-field">
+          @if (messagesStore.errorFrequency() !== 0) {
+          <div class="field-with-hint">
+            <mat-form-field>
+              <mat-label>Select Error Template</mat-label>
+              <mat-select formControlName="merrTemplate" id="select-merr-select">
+                @for (item of ErrorTemplates(); track $index) {
+                <mat-option [value]="item">{{ item.name }}</mat-option>
+                }
+                <mat-option class="new-mesage-option" (click)="onCustomMERRSelectClick()"
+                  [value]="{ name: 'custom', payload: '' }">
+                  Custom
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            @if (showHints()) {
+            <mat-icon class="hint-icon" [matTooltip]="configService.getHint('MERRTemplate')">help_outline</mat-icon>
+            }
+          </div>
           }
         </div>
       </div>
     </div>
   </mat-card>
+
 </div>

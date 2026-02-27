@@ -25,35 +25,28 @@ describe('SimulatorComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should display combined connection status', () => {
+  it('should display combined connection status with individual colors', () => {
     component.connectionDetailsStore.updateDistributorConnectionStatus(ConnectionState.CONNECTED);
     component.connectionDetailsStore.updateProviderConnectionStatus(ConnectionState.DISCONNECTED);
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
-    const connectionStatesDiv = compiled.querySelector('.connection-states');
-    expect(connectionStatesDiv?.textContent).toContain('Distributor: Connected');
-    expect(connectionStatesDiv?.textContent).toContain('Provider: Disconnected');
-    expect(connectionStatesDiv?.classList).toContain('status-disconnected');
-    expect(connectionStatesDiv?.querySelectorAll('p').length).toBe(2);
+    const paragraphs = compiled.querySelectorAll('.connection-states p');
+
+    expect(paragraphs[0].textContent).toContain('Distributor: Connected');
+    expect(paragraphs[0].classList).toContain('status-connected');
+
+    expect(paragraphs[1].textContent).toContain('Provider: Disconnected');
+    expect(paragraphs[1].classList).toContain('status-disconnected');
   });
 
-  it('should have connecting color when either is connecting', () => {
+  it('should have correct colors for various states', () => {
     component.connectionDetailsStore.updateDistributorConnectionStatus(ConnectionState.CONNECTING);
+    component.connectionDetailsStore.updateProviderConnectionStatus(ConnectionState.ERROR);
     fixture.detectChanges();
 
-    const compiled = fixture.nativeElement as HTMLElement;
-    const connectionStatesDiv = compiled.querySelector('.connection-states');
-    expect(connectionStatesDiv?.classList).toContain('status-connecting');
-  });
-
-  it('should have connected color when both are connected', () => {
-    component.connectionDetailsStore.updateDistributorConnectionStatus(ConnectionState.CONNECTED);
-    component.connectionDetailsStore.updateProviderConnectionStatus(ConnectionState.CONNECTED);
-    fixture.detectChanges();
-
-    const compiled = fixture.nativeElement as HTMLElement;
-    const connectionStatesDiv = compiled.querySelector('.connection-states');
-    expect(connectionStatesDiv?.classList).toContain('status-connected');
+    const paragraphs = fixture.nativeElement.querySelectorAll('.connection-states p');
+    expect(paragraphs[0].classList).toContain('status-connecting');
+    expect(paragraphs[1].classList).toContain('status-error');
   });
 });

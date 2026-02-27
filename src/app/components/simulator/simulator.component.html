@@ -7,9 +7,11 @@
         hints
       </mat-checkbox>
     </div>
-    <div class="connection-states" [class]="connectionDetailsStore.connectionStatusColorClass()">
-      <p>Distributor: {{ connectionDetailsStore.distributorStatusLabel() }}</p>
-      <p>Provider: {{ connectionDetailsStore.providerStatusLabel() }}</p>
+    <div class="connection-states">
+      <p [class]="connectionDetailsStore.distributorStatusColorClass()">Distributor: {{
+        connectionDetailsStore.distributorStatusLabel() }}</p>
+      <p [class]="connectionDetailsStore.providerStatusColorClass()">Provider: {{
+        connectionDetailsStore.providerStatusLabel() }}</p>
     </div>
 
   </mat-toolbar>

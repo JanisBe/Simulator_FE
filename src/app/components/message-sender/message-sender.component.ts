@@ -8,6 +8,8 @@ import { MatTableModule } from '@angular/material/table';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ConnectionState, Message } from '../../models/models';
 import { MessagesStore } from '../../store/messages.store';
 import { ConnectionDetailsStore } from '../../store/connection-details.store';
@@ -28,6 +30,8 @@ import { ConfigService } from '../../services/config.service';
     MatDialogModule,
     MatInputModule,
     MatCardModule,
+    MatIconModule,
+    MatTooltipModule,
     FormsModule,
     MessageFrequencyPipe,
   ],
@@ -76,7 +80,7 @@ export class MessageSenderComponent {
     return (
       this.connectionDetailsStore?.isConnectToDistributorSessionDisabled() ||
       this.fixMessageService.simulatorEngineWsConnectionService.stateAsSignal() ===
-        ConnectionState.CONNECTING
+      ConnectionState.CONNECTING
     );
   }
 
@@ -101,7 +105,7 @@ export class MessageSenderComponent {
   }
 
   getRowHeight() {
-    return this.connectionDetailsStore.showHints() ? '200px' : '100px';
+    return '100px';
   }
 
   onDeleteMessageClick(message: Message) {

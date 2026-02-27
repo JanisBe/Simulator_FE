@@ -74,14 +74,21 @@ export const ConnectionDetailsStore = signalStore(
           default: return 'Unknown';
         }
       }),
-      connectionStatusColorClass: computed(() => {
-        const dStatus = distributorSocketConnectionStatus();
-        const pStatus = providerSocketConnectionStatus();
-
-        if (dStatus === ConnectionState.ERROR || pStatus === ConnectionState.ERROR) return 'status-error';
-        if (dStatus === ConnectionState.CONNECTED && pStatus === ConnectionState.CONNECTED) return 'status-connected';
-        if (dStatus === ConnectionState.CONNECTING || pStatus === ConnectionState.CONNECTING) return 'status-connecting';
-        return 'status-disconnected';
+      distributorStatusColorClass: computed(() => {
+        switch (distributorSocketConnectionStatus()) {
+          case ConnectionState.CONNECTED: return 'status-connected';
+          case ConnectionState.CONNECTING: return 'status-connecting';
+          case ConnectionState.ERROR: return 'status-error';
+          default: return 'status-disconnected';
+        }
+      }),
+      providerStatusColorClass: computed(() => {
+        switch (providerSocketConnectionStatus()) {
+          case ConnectionState.CONNECTED: return 'status-connected';
+          case ConnectionState.CONNECTING: return 'status-connecting';
+          case ConnectionState.ERROR: return 'status-error';
+          default: return 'status-disconnected';
+        }
       }),
     }),
   ),
