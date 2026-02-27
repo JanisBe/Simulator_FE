@@ -1,5 +1,9 @@
 .fix-message-editor-container {
   padding: 30px;
+  height: 75vh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
 
   .header-container {
     display: flex;
@@ -32,7 +36,7 @@
 
 .properties-table {
   overflow: auto;
-  max-height: 400px;
+  flex: 1;
 }
 
 .fix-message-editor-buttons {

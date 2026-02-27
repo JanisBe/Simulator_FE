@@ -19,6 +19,7 @@ import { Property } from '../../models/fix-models';
 import { NotificationDisplayService } from '../../services/notification-display.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { FixMessageConverterService } from '../../services/fix-message-converter.service';
 
 export interface FixFieldKey {
@@ -35,6 +36,7 @@ export interface FixFieldKey {
     MatAutocompleteModule,
     MatTooltipModule,
     MatButtonModule,
+    MatIconModule,
   ],
   templateUrl: './editable-fix-table.component.html',
   styleUrl: './editable-fix-table.component.scss',
