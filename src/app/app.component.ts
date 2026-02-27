@@ -10,4 +10,4 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
   styleUrls: ['./app.component.scss'],
   imports: [RouterOutlet, MatTabsModule, MatToolbarModule, MatCheckboxModule],
 })
-export class AppComponent {}
+export class AppComponent { }

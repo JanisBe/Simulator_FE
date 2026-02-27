@@ -20,8 +20,8 @@ export class ConfigService {
   //private _webSocketbaseUrl =  '';
   private _stompWebSocketBaseurl = '';
   private simulatorEngineConnectionService = inject(SimulatorEngineConnectionService);
-  
-  reguestConfig() {
+
+  requestConfig() {
     return () =>
       this.simulatorEngineConnectionService
         .getApplicationConfiguration()
@@ -40,7 +40,7 @@ export class ConfigService {
     this._stompWebSocketBaseurl = config?.stompWebSocketBaseurl ?? '';
   }
 
-  get distibutors() {
+  get distributors() {
     return this._distributors;
   }
 

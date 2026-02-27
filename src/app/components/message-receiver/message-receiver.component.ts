@@ -1,11 +1,12 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, computed } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
-import { ConnectionState, ReceivedMessage } from '../../models/models';
+import { ConnectionState } from '../../models/models';
 import { MessagesStore } from '../../store/messages.store';
 import { ConnectionDetailsStore } from '../../store/connection-details.store';
 import { ProviderReplyService } from '../../services/provider-reply.service';
@@ -24,19 +25,41 @@ import { ProviderReplyService } from '../../services/provider-reply.service';
   templateUrl: './message-receiver.component.html',
   styleUrl: './message-receiver.component.scss',
 })
-export class MessageReceiverComponent implements OnInit {
+export class MessageReceiverComponent {
   readonly dialog = inject(MatDialog);
   readonly messagesStore = inject(MessagesStore);
   readonly connectionDetailsStore = inject(ConnectionDetailsStore);
   public providerReplyService = inject(ProviderReplyService);
 
-  ngOnInit(): void {
-    this.providerReplyService.data$.subscribe(data => (this.messages = data));
-  }
-
-  messages: ReceivedMessage[] = [];
+  messages = toSignal(this.providerReplyService.data$, { initialValue: [] });
 
   displayedColumns: string[] = ['payload'];
+
+  isConnectButtonDisabled = computed(() => {
+    const state = this.providerReplyService?.simulatorEngineWsConnectionService?.stateAsSignal();
+    const env = this.connectionDetailsStore.selectedEnvironment();
+    const gateway = this.connectionDetailsStore.selectedGatewayType();
+    const provider = this.connectionDetailsStore.selectedProvider();
+    const ecniTemplate = this.messagesStore.selectedECNITemplate();
+    const tbkdTemplate = this.messagesStore.selectedTBKDTemplate();
+    const errorFrequency = this.messagesStore.errorFrequency();
+    const merrTemplate = this.messagesStore.selectedMERRTemplate();
+
+    return (
+      state === ConnectionState.CONNECTING ||
+      !env ||
+      !gateway ||
+      !provider ||
+      ecniTemplate?.payload === '' ||
+      tbkdTemplate?.payload === '' ||
+      (errorFrequency !== 0 && merrTemplate.payload === '')
+    );
+  });
+
+  isProviderSessionStarted = computed(
+    () =>
+      this.connectionDetailsStore.providerSocketConnectionStatus() === ConnectionState.CONNECTED,
+  );
 
   startConnection() {
     this.providerReplyService.startConnection();
@@ -44,25 +67,5 @@ export class MessageReceiverComponent implements OnInit {
 
   stopConnection() {
     this.providerReplyService.disconnectFromSession();
-  }
-
-  isConnectButtonDisabled() {
-    return (
-      this.providerReplyService?.simulatorEngineWsConnectionService?.stateAsSignal() ===
-        ConnectionState.CONNECTING ||
-      !this.connectionDetailsStore.selectedEnvironment() ||
-      !this.connectionDetailsStore.selectedGatewayType() ||
-      !this.connectionDetailsStore.selectedProvider() ||
-      this.messagesStore.selectedECNITemplate()?.payload === '' ||
-      this.messagesStore.selectedTBKDTemplate()?.payload === '' ||
-      (this.messagesStore.errorFrequency() !== 0 &&
-        this.messagesStore.selectedMERRTemplate().payload === '')
-    );
-  }
-
-  isProviderSessionStarted() {
-    return (
-      this.connectionDetailsStore.providerSocketConnectionStatus() === ConnectionState.CONNECTED
-    );
   }
 }

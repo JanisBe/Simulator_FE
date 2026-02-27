@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, effect } from '@angular/core';
+import { Component, inject, OnInit, effect, signal, computed } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -36,16 +36,17 @@ export class ConnectionDetailsPanelComponent implements OnInit {
   private messageEditorInitService = inject(MessageEditorInitService);
   public configService = inject(ConfigService);
 
-  environments: string[] = [];
-  distributors: string[] = [];
-  allDistributors: EnviromentAvaliableDistributors[] = [];
-  providers: string[] = [];
+  environments = signal<string[]>([]);
+  distributors = signal<string[]>([]);
+  allDistributors = signal<EnviromentAvaliableDistributors[]>([]);
+  providers = signal<string[]>([]);
   errorIntervals: number[] = [0, 5, 10, 20];
   gateways: string[] = ['FIX'];
+  readonly showHints = this.connectionDetailsStore.showHints;
 
-  TBKDTemplates: Template[] = [];
-  ECNITemplates: Template[] = [];
-  ErrorTemplates: Template[] = [];
+  TBKDTemplates = signal<Template[]>([]);
+  ECNITemplates = signal<Template[]>([]);
+  ErrorTemplates = signal<Template[]>([]);
 
   form = this.fb.group({
     environment: [''],
@@ -59,6 +60,45 @@ export class ConnectionDetailsPanelComponent implements OnInit {
     merrTemplate: [{ name: '', payload: '' } as Template],
   });
 
+  readonly isConnectButtonDisabled = computed(() => {
+    const { environment, gatewayType, provider } = this.form.getRawValue();
+    return !environment || !gatewayType || !provider;
+  });
+
+  readonly distributorConnectionStateLabel = computed(() => {
+    switch (this.connectionDetailsStore.distributorSocketConnectionStatus()) {
+      case ConnectionState.DISCONNECTED: return 'Disconnected';
+      case ConnectionState.CONNECTING: return 'Connecting...';
+      case ConnectionState.CONNECTED: return 'Connected';
+      case ConnectionState.ERROR: return 'Error';
+      default: return 'Unknown';
+    }
+  });
+
+  readonly providerConnectionStateLabel = computed(() => {
+    switch (this.connectionDetailsStore.providerSocketConnectionStatus()) {
+      case ConnectionState.DISCONNECTED: return 'Disconnected';
+      case ConnectionState.CONNECTING: return 'Connecting...';
+      case ConnectionState.CONNECTED: return 'Listening';
+      case ConnectionState.ERROR: return 'Error';
+      default: return 'Unknown';
+    }
+  });
+
+  readonly shouldInputsBeDisabled = computed(() =>
+    this.connectionDetailsStore.distributorSocketConnectionStatus() === ConnectionState.CONNECTED ||
+    this.connectionDetailsStore.providerSocketConnectionStatus() === ConnectionState.CONNECTED
+  );
+
+  readonly shouldDistributorFieldBeDisabled = computed(() =>
+    this.connectionDetailsStore.distributorSocketConnectionStatus() === ConnectionState.CONNECTED ||
+    this.connectionDetailsStore.distributorSocketConnectionStatus() === ConnectionState.CONNECTING
+  );
+
+  readonly shouldTemplatesSelectPanelBeDisabled = computed(() =>
+    this.connectionDetailsStore.providerSocketConnectionStatus() === ConnectionState.CONNECTED
+  );
+
   constructor() {
     this.setupFormSubscriptions();
     this.setupDisabledStateEffect();
@@ -70,7 +110,7 @@ export class ConnectionDetailsPanelComponent implements OnInit {
       const distributorDisabled = this.shouldDistributorFieldBeDisabled();
       const templatesDisabled = this.shouldTemplatesSelectPanelBeDisabled();
 
-      // Environment and Gateway are disabled if any connection is active
+      // Environment and Gateway
       if (inputsDisabled) {
         this.form.controls.environment.disable({ emitEvent: false });
         this.form.controls.gatewayType.disable({ emitEvent: false });
@@ -79,14 +119,14 @@ export class ConnectionDetailsPanelComponent implements OnInit {
         this.form.controls.gatewayType.enable({ emitEvent: false });
       }
 
-      // Distributor has its own logic
+      // Distributor
       if (distributorDisabled) {
         this.form.controls.distributor.disable({ emitEvent: false });
       } else {
         this.form.controls.distributor.enable({ emitEvent: false });
       }
 
-      // Templates and frequency are disabled if provider is connected
+      // Templates and frequency
       if (templatesDisabled) {
         this.form.controls.tbkdTemplate.disable({ emitEvent: false });
         this.form.controls.ecniTemplate.disable({ emitEvent: false });
@@ -102,25 +142,20 @@ export class ConnectionDetailsPanelComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.allDistributors = this.configService.distibutors ?? [];
-    this.providers = this.configService.providers ?? [];
-    this.environments = this.configService.environments ?? [];
-    this.TBKDTemplates = this.configService.tbkdTemplates ?? [];
-    this.ECNITemplates = this.configService.ecniTemplates ?? [];
-    this.ErrorTemplates = this.configService.merrTemplates ?? [];
+    this.allDistributors.set(this.configService.distributors ?? []);
+    this.providers.set(this.configService.providers ?? []);
+    this.environments.set(this.configService.environments ?? []);
+    this.TBKDTemplates.set(this.configService.tbkdTemplates ?? []);
+    this.ECNITemplates.set(this.configService.ecniTemplates ?? []);
+    this.ErrorTemplates.set(this.configService.merrTemplates ?? []);
 
-    // Initialize form with store values
-    this.form.patchValue(
-      {
-        environment: this.connectionDetailsStore.selectedEnvironment(),
-        gatewayType: this.connectionDetailsStore.selectedGatewayType() || 'FIX',
-        distributor: this.connectionDetailsStore.selectedDistributor(),
-        provider: this.connectionDetailsStore.selectedProvider(),
-        errorFrequency: this.messagesStore.errorFrequency(),
-      },
-      { emitEvent: true },
-    );
-
+    this.form.patchValue({
+      environment: this.connectionDetailsStore.selectedEnvironment(),
+      gatewayType: this.connectionDetailsStore.selectedGatewayType() || 'FIX',
+      distributor: this.connectionDetailsStore.selectedDistributor(),
+      provider: this.connectionDetailsStore.selectedProvider(),
+      errorFrequency: this.messagesStore.errorFrequency(),
+    }, { emitEvent: true });
   }
 
   private setupFormSubscriptions() {
@@ -130,50 +165,34 @@ export class ConnectionDetailsPanelComponent implements OnInit {
       this.form.controls.distributor.setValue('', { emitEvent: true });
     });
 
-    this.form.controls.gatewayType.valueChanges
-      .pipe(takeUntilDestroyed())
+    this.form.controls.gatewayType.valueChanges.pipe(takeUntilDestroyed())
       .subscribe(val => this.connectionDetailsStore.updateSelectedGatewayType(val));
 
-    this.form.controls.distributor.valueChanges
-      .pipe(takeUntilDestroyed())
+    this.form.controls.distributor.valueChanges.pipe(takeUntilDestroyed())
       .subscribe(val => this.connectionDetailsStore.updateSelectedDistributor(val));
 
-    this.form.controls.provider.valueChanges
-      .pipe(takeUntilDestroyed())
+    this.form.controls.provider.valueChanges.pipe(takeUntilDestroyed())
       .subscribe(val => this.connectionDetailsStore.updateSelectedProvider(val));
 
-    this.form.controls.useCustomProvider.valueChanges.pipe(takeUntilDestroyed()).subscribe(val => {
-      this.form.controls.provider.setValue('');
-    });
+    this.form.controls.useCustomProvider.valueChanges.pipe(takeUntilDestroyed())
+      .subscribe(() => this.form.controls.provider.setValue(''));
 
-    this.form.controls.tbkdTemplate.valueChanges
-      .pipe(takeUntilDestroyed())
-      .subscribe(val =>
-        this.messagesStore.updateSelectedTBKDTemplate(this.validatePredefinedTemplate(val)),
-      );
+    this.form.controls.tbkdTemplate.valueChanges.pipe(takeUntilDestroyed())
+      .subscribe(val => this.messagesStore.updateSelectedTBKDTemplate(this.validatePredefinedTemplate(val)));
 
-    this.form.controls.ecniTemplate.valueChanges
-      .pipe(takeUntilDestroyed())
-      .subscribe(val =>
-        this.messagesStore.updateSelectedECNITemplate(this.validatePredefinedTemplate(val)),
-      );
+    this.form.controls.ecniTemplate.valueChanges.pipe(takeUntilDestroyed())
+      .subscribe(val => this.messagesStore.updateSelectedECNITemplate(this.validatePredefinedTemplate(val)));
 
-    this.form.controls.merrTemplate.valueChanges
-      .pipe(takeUntilDestroyed())
-      .subscribe(val =>
-        this.messagesStore.updateSelectedMERRTemplate(this.validatePredefinedTemplate(val)),
-      );
+    this.form.controls.merrTemplate.valueChanges.pipe(takeUntilDestroyed())
+      .subscribe(val => this.messagesStore.updateSelectedMERRTemplate(this.validatePredefinedTemplate(val)));
 
-    this.form.controls.errorFrequency.valueChanges
-      .pipe(takeUntilDestroyed())
+    this.form.controls.errorFrequency.valueChanges.pipe(takeUntilDestroyed())
       .subscribe(val => this.messagesStore.updateSelectedErrorFrequency(val));
   }
 
   private updateDistributorsList(environmentType: string) {
-    const distributorsonSelectedEnvironment = this.allDistributors.find(
-      distributor => distributor.environmentName === environmentType,
-    );
-    this.distributors = distributorsonSelectedEnvironment?.avaliableDistributors ?? [];
+    const matched = this.allDistributors().find(d => d.environmentName === environmentType);
+    this.distributors.set(matched?.avaliableDistributors ?? []);
   }
 
   validatePredefinedTemplate(template: Template): Template {
@@ -187,94 +206,27 @@ export class ConnectionDetailsPanelComponent implements OnInit {
     );
 
     return {
-      payload:
-        this.fixMessageConverterService.convertParamsListToSerializedPayload(updatedTemplate),
+      payload: this.fixMessageConverterService.convertParamsListToSerializedPayload(updatedTemplate),
       name: template.name,
     };
   }
 
-  showHints() {
-    return this.connectionDetailsStore.showHints();
-  }
-
-  isConnectButtonDisabled() {
-    const { environment, gatewayType, provider } = this.form.getRawValue();
-    return !environment || !gatewayType || !provider;
-  }
-
   onCustomTBKDSelectClick() {
-    if (this.messagesStore.editedTBKDMessage()?.payload) {
-      this.messageEditorInitService.openFixEditorModal('edit', 'TBKD');
-      return;
-    }
-    this.messageEditorInitService.openFixEditorModal('new', 'TBKD');
+    const mode = this.messagesStore.editedTBKDMessage()?.payload ? 'edit' : 'new';
+    this.messageEditorInitService.openFixEditorModal(mode, 'TBKD');
   }
 
   onCustomECNISelectClick() {
-    if (this.messagesStore.editedECNIMessage()?.payload) {
-      this.messageEditorInitService.openFixEditorModal('edit', 'ECNI');
-      return;
-    }
-    this.messageEditorInitService.openFixEditorModal('new', 'ECNI');
+    const mode = this.messagesStore.editedECNIMessage()?.payload ? 'edit' : 'new';
+    this.messageEditorInitService.openFixEditorModal(mode, 'ECNI');
   }
 
   onCustomMERRSelectClick() {
-    if (this.messagesStore.editedErrorMessage()?.payload) {
-      this.messageEditorInitService.openFixEditorModal('edit', 'MERR');
-      return;
-    }
-    this.messageEditorInitService.openFixEditorModal('new', 'MERR');
+    const mode = this.messagesStore.editedErrorMessage()?.payload ? 'edit' : 'new';
+    this.messageEditorInitService.openFixEditorModal(mode, 'MERR');
   }
 
   formatSelectedErrorFrequency(frequency: number) {
     return frequency === 0 ? 'None' : frequency.toString();
-  }
-
-  shouldInputsBeDisabled() {
-    return (
-      this.connectionDetailsStore.distributorSocketConnectionStatus() ===
-      ConnectionState.CONNECTED ||
-      this.connectionDetailsStore.providerSocketConnectionStatus() === ConnectionState.CONNECTED
-    );
-  }
-
-  shouldDistributorFieldBeDisabled() {
-    return (
-      this.connectionDetailsStore.distributorSocketConnectionStatus() ===
-      ConnectionState.CONNECTED ||
-      this.connectionDetailsStore.distributorSocketConnectionStatus() === ConnectionState.CONNECTING
-    );
-  }
-
-  shouldTemplatesSelectPanelBeDisabled() {
-    return (
-      this.connectionDetailsStore.providerSocketConnectionStatus() === ConnectionState.CONNECTED
-    );
-  }
-
-  distributorConnectionDetailsState() {
-    switch (this.connectionDetailsStore.distributorSocketConnectionStatus()) {
-      case ConnectionState.DISCONNECTED:
-        return 'Disconnected';
-      case ConnectionState.CONNECTING:
-        return 'Connecting...';
-      case ConnectionState.CONNECTED:
-        return 'Connected';
-      case ConnectionState.ERROR:
-        return 'Error';
-    }
-  }
-
-  providerConnectionDetailsState() {
-    switch (this.connectionDetailsStore.providerSocketConnectionStatus()) {
-      case ConnectionState.DISCONNECTED:
-        return 'Disconnected';
-      case ConnectionState.CONNECTING:
-        return 'Connecting...';
-      case ConnectionState.CONNECTED:
-        return 'Listening';
-      case ConnectionState.ERROR:
-        return 'Error';
-    }
   }
 }

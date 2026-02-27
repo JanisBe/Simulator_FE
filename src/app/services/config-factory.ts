@@ -2,7 +2,7 @@ import { APP_INITIALIZER } from '@angular/core';
 import { ConfigService } from './config.service';
 
 function requestConfig(configService: ConfigService) {
-  return configService.reguestConfig();
+  return configService.requestConfig();
 }
 
 export function getConfigProviders() {

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { SimulatorComponent } from './simulator/simulator.component';
+import { SimulatorComponent } from './components/simulator/simulator.component';
 
 const routes: Routes = [
   { path: 'simulator', component: SimulatorComponent },
@@ -12,4 +12,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

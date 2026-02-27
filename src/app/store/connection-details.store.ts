@@ -49,7 +49,11 @@ export const ConnectionDetailsStore = signalStore(
           distributorSocketConnectionStatus() === ConnectionState.CONNECTING,
       ),
       isAddNewMessageButtonDisabled: computed(
-        () => isBatchMessageTriggered() || !selectedGatewayType(),
+        () =>
+          isBatchMessageTriggered() ||
+          !selectedGatewayType() ||
+          !selectedDistributor() ||
+          !selectedEnvironment(),
       ),
     }),
   ),

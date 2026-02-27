@@ -56,8 +56,8 @@ export class FixMessageConverterService {
     let isTemplateKeyValid = true;
     const messages = [];
 
-    if (!this.hasOnlyNumbers(fixMessageKey)) {
-      messages.push('Message key must be integer number.');
+    if (!/^\d+$/.test(fixMessageKey)) {
+      messages.push('Message key must be an integer.');
       isTemplateKeyValid = false;
     }
 
@@ -109,11 +109,7 @@ export class FixMessageConverterService {
   }
 
   formatTemplateForSplitting(template: string) {
-    if (template.slice(-1) === '|') {
-      return template.slice(0, -1);
-    }
-
-    return template;
+    return template.endsWith('|') ? template.slice(0, -1) : template;
   }
 
   getFixDescriptionFromMessageKey(key: number) {
@@ -121,25 +117,6 @@ export class FixMessageConverterService {
   }
 
   generateNumericID() {
-    const timestamp = Date.now();
-    // @ts-expect-error depends on the browser can be msCrypto
-    const crypto = window.crypto || window.msCrypto;
-    const array = new Uint32Array(1);
-    crypto.getRandomValues(array);
-    const randomNum = array[0] % 1e6;
-    return timestamp * 1e6 + randomNum;
-  }
-
-  private hasOnlyNumbers(str: string) {
-    if (!str) {
-      return false;
-    }
-    // eslint-disable-next-line
-    for (let i = 0; i < str.length; i++) {
-      if (isNaN(Number(str[i])) || str[i] === ' ') {
-        return false;
-      }
-    }
-    return true;
+    return Number(BigInt('0x' + crypto.randomUUID().replace(/-/g, '').slice(0, 12)));
   }
 }

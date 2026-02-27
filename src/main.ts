@@ -1,6 +1,6 @@
 import { importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
-import { AppComponent } from './app/components/app.component';
-import { AppRoutingModule } from './app/components/app-routing.module';
+import { AppComponent } from './app/app.component';
+import { AppRoutingModule } from './app/app-routing.module';
 import { bootstrapApplication, BrowserModule } from '@angular/platform-browser';
 import { provideHttpClient } from '@angular/common/http';
 import { getConfigProviders } from './app/services/config-factory';

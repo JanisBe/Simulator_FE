@@ -18,7 +18,7 @@ describe('ConfigService', () => {
   });
 
   it('should request config', () => {
-    service.reguestConfig();
+    service.requestConfig();
     service.mapConfig({
       stompWebSocketBaseurl: '',
       distributors: [
@@ -98,7 +98,7 @@ describe('ConfigService', () => {
   });
 
   it('should request config with empty values', () => {
-    service.reguestConfig();
+    service.requestConfig();
 
     //@ts-expect-error covering case when empty object is parsed
     service.mapConfig({});

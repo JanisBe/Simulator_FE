@@ -59,6 +59,8 @@ describe('MessageSenderComponent', () => {
 
   it('add new message button should be enabled if all required params are selected', () => {
     component.connectionDetailsStore.updateSelectedGatewayType('FIX');
+    component.connectionDetailsStore.updateSelectedDistributor('ZIN70');
+    component.connectionDetailsStore.updateSelectedEnvironment('BETA');
     expect(component.isAddNewMessageButtonDisabled()).toBe(false);
   });
 
@@ -74,6 +76,8 @@ describe('MessageSenderComponent', () => {
 
   it('should open add message modal on add new message click', () => {
     component.connectionDetailsStore.updateSelectedGatewayType('FIX');
+    component.connectionDetailsStore.updateSelectedDistributor('ZIN70');
+    component.connectionDetailsStore.updateSelectedEnvironment('BETA');
     component.onAddNewMessageClick();
     fixture.detectChanges();
     expect(component.isAddNewMessageButtonDisabled()).toEqual(false);
@@ -81,6 +85,8 @@ describe('MessageSenderComponent', () => {
 
   it('should open modify message modal on row message click', () => {
     component.connectionDetailsStore.updateSelectedGatewayType('FIX');
+    component.connectionDetailsStore.updateSelectedDistributor('ZIN70');
+    component.connectionDetailsStore.updateSelectedEnvironment('BETA');
     const message = { id: 1, type: 'OINP', payload: 'test' };
     component.messagesStore.addMessage({ id: 1, type: 'OINP', payload: 'test' });
     component.onRowClick(message);

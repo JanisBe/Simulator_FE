@@ -1,16 +1,12 @@
 @use '@angular/material' as mat;
 
-$theme: mat.define-theme(
-  (
-    color: (
-      theme-type: dark,
-      primary: mat.$violet-palette,
-    ),
-    density: (
-      scale: -3,
-    ),
-  )
-);
+$theme: mat.define-theme((color: (theme-type: light, primary: mat.$violet-palette,
+      ),
+      density: (scale: -1,
+      ),
+    ));
+@include mat.all-component-themes($theme);
+@include mat.typography-hierarchy($theme);
 
 .grid-input {
   .mat-mdc-form-field-subscript-wrapper {
@@ -24,6 +20,7 @@ $theme: mat.define-theme(
 
 .mdc-text-field--outlined {
   .mat-mdc-form-field-flex {
+
     /* Common customizations for both labeled and non-labeled fields */
     .mdc-notched-outline {
       height: 45px;

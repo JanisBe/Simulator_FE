@@ -149,31 +149,31 @@ describe('ConnectionDetailsPanelComponent', () => {
 
   it('should return proper distributor connection state', () => {
     component.connectionDetailsStore.updateDistributorConnectionStatus(ConnectionState.ERROR);
-    expect(component.distributorConnectionDetailsState()).toEqual('Error');
+    expect(component.distributorConnectionStateLabel()).toEqual('Error');
 
     component.connectionDetailsStore.updateDistributorConnectionStatus(
       ConnectionState.DISCONNECTED,
     );
-    expect(component.distributorConnectionDetailsState()).toEqual('Disconnected');
+    expect(component.distributorConnectionStateLabel()).toEqual('Disconnected');
 
     component.connectionDetailsStore.updateDistributorConnectionStatus(ConnectionState.CONNECTED);
-    expect(component.distributorConnectionDetailsState()).toEqual('Connected');
+    expect(component.distributorConnectionStateLabel()).toEqual('Connected');
 
     component.connectionDetailsStore.updateDistributorConnectionStatus(ConnectionState.CONNECTING);
-    expect(component.distributorConnectionDetailsState()).toEqual('Connecting...');
+    expect(component.distributorConnectionStateLabel()).toEqual('Connecting...');
   });
 
   it('should return proper provider connection state', () => {
     component.connectionDetailsStore.updateProviderConnectionStatus(ConnectionState.ERROR);
-    expect(component.providerConnectionDetailsState()).toEqual('Error');
+    expect(component.providerConnectionStateLabel()).toEqual('Error');
 
     component.connectionDetailsStore.updateProviderConnectionStatus(ConnectionState.DISCONNECTED);
-    expect(component.providerConnectionDetailsState()).toEqual('Disconnected');
+    expect(component.providerConnectionStateLabel()).toEqual('Disconnected');
 
     component.connectionDetailsStore.updateProviderConnectionStatus(ConnectionState.CONNECTED);
-    expect(component.providerConnectionDetailsState()).toEqual('Listening');
+    expect(component.providerConnectionStateLabel()).toEqual('Listening');
 
     component.connectionDetailsStore.updateProviderConnectionStatus(ConnectionState.CONNECTING);
-    expect(component.providerConnectionDetailsState()).toEqual('Connecting...');
+    expect(component.providerConnectionStateLabel()).toEqual('Connecting...');
   });
 });

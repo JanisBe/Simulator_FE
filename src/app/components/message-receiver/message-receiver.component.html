@@ -1,12 +1,10 @@
 <mat-card appearance="outlined">
   <mat-card-header>
     <mat-card-title> Provider messages</mat-card-title>
-    <mat-card-subtitle
-      >Total messages: {{ providerReplyService.messagesCounter() }}</mat-card-subtitle
-    >
+    <mat-card-subtitle>Total messages: {{ providerReplyService.messagesCounter() }}</mat-card-subtitle>
   </mat-card-header>
   <div class="messages-table">
-    <table mat-table [dataSource]="messages" class="mat-elevation-z8">
+    <table mat-table [dataSource]="messages()" class="mat-elevation-z8">
       <ng-container matColumnDef="payload">
         <th mat-header-cell *matHeaderCellDef>Name</th>
         <td mat-cell *matCellDef="let element">{{ element.payload }}</td>
@@ -21,19 +19,15 @@
 
 <div class="mesage-receiver-send-buttons">
   @if (!isProviderSessionStarted()) {
-    <button
-      [disabled]="isConnectButtonDisabled()"
-      id="mesage-receiver-connect-button"
-      (click)="startConnection()"
-      mat-stroked-button
-    >
-      Connect to Provider session.
-    </button>
+  <button [disabled]="isConnectButtonDisabled()" id="mesage-receiver-connect-button" (click)="startConnection()"
+    mat-stroked-button>
+    Connect to Provider session.
+  </button>
   }
 
   @if (isProviderSessionStarted()) {
-    <button (click)="stopConnection()" id="mesage-receiver-disconnect-button" mat-stroked-button>
-      Disonnect from provider session.
-    </button>
+  <button (click)="stopConnection()" id="mesage-receiver-disconnect-button" mat-stroked-button>
+    Disonnect from provider session.
+  </button>
   }
 </div>
